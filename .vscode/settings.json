@@ -1,0 +1,45 @@
+{
+    "cmake.configureSettings": {
+    },
+    "cmake.environment": {
+        "PICO_SDK_PATH": "/home/alan/pico/pico-sdk/"
+    },
+    "cmake.preferredGenerators": [
+
+    ],
+    "cSpell.words": [
+        "backports",
+        "eabi",
+        "gpio",
+        "interp",
+        "libnewlib",
+        "libstdc",
+        "multicore",
+        "newlib",
+        "pico",
+        "picoboard",
+        "quickstart",
+        "stdlib",
+        "uart",
+        "usbipd"
+    ],
+    "cmake.configureOnOpen": true,
+    "cmake.statusbar.advanced": {
+        "debug": {
+            "visibility": "hidden"
+        },
+        "launch": {
+            "visibility": "hidden"
+        },
+        "build": {
+            "visibility": "default"
+        },
+        "buildTarget": {
+            "visibility": "hidden"
+        }
+    },
+    "cmake.buildBeforeRun": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cortex-debug.openocdPath": "/usr/local/bin/openocd",
+    "cortex-debug.gdbPath": "gdb-multiarch"
+}
