@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Pico Linux",
+            "name": "Pico on Linux",
             "includePath": [
                 "${workspaceFolder}/**",
                 "/home/alan/pico/pico-sdk/**",
