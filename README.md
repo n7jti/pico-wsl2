@@ -1,8 +1,8 @@
 # Raspberry Pi Pico 2040 C++ development using WSL2, a PicoProbe, and VS Code
-Here are the Setup instructions for raspberry pi pico development using a pico-probe on WSL2 and VSCode.
+Here are the Setup instructions for raspberry pi pico development using a pico-probe on WSL2 and VSCode.  This repo contains a working and properly configured VScode example that flashes an LED and Writes to the standard UART.  
 
 ## In Windows
-First, let's get windows completely setup.  I couldn't find a single place with instructions for everything. But I was able to figure it all out through a combination of sites. 
+First, let's get windows completely setup so that we can use WSL2 (Linux) for our ARM development on the PICO.  I couldn't find a single place with instructions for everything. But I was able to figure it all out through a combination of sites. 
 
 Here are the basic steps:
 1. Setup WSL2 itself
@@ -53,7 +53,7 @@ Next, we start following the official Raspberry PI Pico quick start documentatio
 
 Start by opening the Ubuntu command line from Windows Terminal.  
 
-   $ sudo apt install git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib ninja-build
+   $ sudo apt install git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib ninja-build gdb-multiarch
 
 Next we clone the PICO SDK directory.  The official documentation is quiet about where to put it. But I recommend (based on other walk-throughs on this) to put in in ~/pico.  Once you clone the sub-directory then update the submodules. 
 
@@ -106,6 +106,7 @@ Install the following extensions
 1. Remote -- WSL https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl
 2. C/C++ -- https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
 3. CMake Tools -- https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
+4. Coretx Debug -- https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
 
 Install the pico-examples
 
@@ -122,19 +123,88 @@ Follow the instructions in the blog above to continue: https://paulbupejr.com/ra
 
 1. Configure CMake Extension
 
-One correction -- put the path to the Pico SDK in "cmake.environment" instead of "cmake.buildEnvironment". 
-
-    "cmake.environment": {
-        "PICO_SDK_PATH": "/home/alan/pico/pico-sdk/"
-    },
-
-You can change this by clicking "edit json" 
+The CMake extension configuration is in the .vscode/settings.json file.  One change from the blog is that the cmake.environment is set, rather than the cmake.buildEnvironment. This resolved an error seen during CMake configuration.  
 
 2. Configure Intellisense
-3. Configure Compiler and Build
-4. If you haven't already, install ninja-build
 
-    $ sudo apt install ninja-build
+The intellisense configuration is in the .vscode/c_cpp_properties.json. 
+
+3. Configure debugging
+
+The debugger configuration (which uses OpenOCD) is in .vscode/launch.json.  To make full use of this you need to build the pico version of OpenOCD as well as the Picoprobe software.  OpenOCD gets installed into WSL, and the Picoprobe software gets installed in a 2nd Pico which is used as a debug dongle. 
+
+
+## Hardware debugging using Picoprobe, OpenOCD and VSCode
+
+Follow the instructions in the "Getting Started with Raspberry Pi Pico, C/C++ development with Raspberry Pi Pico and other RP2040-based microcontroller boards":  https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
+
+The instructions for Pico Setup for command line use starts in Chapter 1.  But if you started at the top, that is already done. What you are looking for here is setting up the Picoprobe on a 2nd Pico to use as a debug dongle with OpenOCD.  You'll find those instructions in Appendix A. 
+
+Note: Because we are using WSL, we will follow the linux directions. 
+
+1. Get a 2nd Pico.
+2. Wire it up as per the drawing.  Use good quality breadboards and jumpers.  If you have bad or intermittent connections you will get errors when OpenOCD is launched. 
+3. Build OpenOCD from the Raspberry Pi Fork on Github
+4. Build and Flash picoprobe
+5. If you wire-up the UART you can also use the UART in Linux (WSL2) as well. 
+
+## Configuring USB for WSL2
+
+To use USB with WSL2 you'll follow the instructions here: https://learn.microsoft.com/en-us/windows/wsl/connect-usb
+
+1. Install the USBIPD-WIN project.  Latest version is 3.0 and you can find it here: https://github.com/dorssel/usbipd-win/releases
+2. Installation instructions are in the README file for USBIPD-WIN found here: https://github.com/dorssel/usbipd-win
+4. Once installed, find the busid of the PicoProbe
+
+```
+    PS C:\Users\alanlu> usbipd wsl list
+
+    BUSID  VID:PID    DEVICE                                                        STATE
+    2-10   8087:0033  Intel(R) Wireless Bluetooth(R)                                Not attached
+    4-2    045e:07c6  Surface Ethernet Adapter                                      Not attached
+    9-3    045e:0904  USB Input Device                                              Not attached
+    10-1   045e:07a5  USB Input Device                                              Not attached
+    10-2   046d:0843  Logitech Webcam C930e                                         Not attached
+    11-5   04d8:0b2a  USB Input Device                                              Not attached
+    12-3   046d:0a8f  Logi USB Headset, USB Input Device                            Not attached
+    12-4   2e8a:000c  CMSIS-DAP v2 Interface, USB Serial Device (COM4)              Not attached
+    12-5   04d8:0b2a  USB Input Device                                              Not attached
+
+    PS C:\Users\alanlu>
+```
+
+Then you can share it with WSL2 (Linux).  You will need to run this from an elevated command window
+
+```
+    PS C:\Users\alanlu> usbipd wsl attach --busid 12-4
+    PS C:\Users\alanlu> usbipd wsl list
+    BUSID  VID:PID    DEVICE                                                        STATE
+    2-10   8087:0033  Intel(R) Wireless Bluetooth(R)                                Not attached
+    4-2    045e:07c6  Surface Ethernet Adapter                                      Not attached
+    9-3    045e:0904  USB Input Device                                              Not attached
+    10-1   045e:07a5  USB Input Device                                              Not attached
+    10-2   046d:0843  Logitech Webcam C930e                                         Not attached
+    11-5   04d8:0b2a  USB Input Device                                              Not attached
+    12-3   046d:0a8f  Logi USB Headset, USB Input Device                            Not attached
+    12-4   2e8a:000c  CMSIS-DAP v2 Interface, USB Serial Device (COM4)              Attached - Ubuntu-22.04
+    12-5   04d8:0b2a  USB Input Device                                              Not attached
+
+    PS C:\Users\alanlu>
+```
+
+If you get an error telling you to install software in Linux, follow the instructions in the error message
+
+Once it is attached to WSL2, you should find the pico-probe in linux using lsusb
+
+```
+    alan@AlanLu-Surface:~$ lsusb
+    Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+    Bus 001 Device 009: ID 2e8a:000c Raspberry Pi Picoprobe CMSIS-DAP
+    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    alan@AlanLu-Surface:~$
+```
+
+
 
 
 
