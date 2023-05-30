@@ -53,7 +53,7 @@ Next, we start following the official Raspberry PI Pico quick start documentatio
 
 Start by opening the Ubuntu command line from Windows Terminal.  
 
-   $ sudo apt install git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib ninja-build gdb-multiarch
+    $ sudo apt install git cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib ninja-build gdb-multiarch
 
 Next we clone the PICO SDK directory.  The official documentation is quiet about where to put it. But I recommend (based on other walk-throughs on this) to put in in ~/pico.  Once you clone the sub-directory then update the submodules. 
 
