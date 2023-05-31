@@ -112,7 +112,7 @@ Install the pico-examples
 
     $ cd
     $ cd pico
-    $ clone -b master https://github.com/raspberrypi/pico-examples.git
+    $ git clone -b master https://github.com/raspberrypi/pico-examples.git
     $ cd pico-examples
 
 Start vscode
