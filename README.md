@@ -63,7 +63,7 @@ Next we clone the PICO SDK directory.  The official documentation is quiet about
     $ cd pico
     $ git clone https://github.com/raspberrypi/pico-sdk.git
     $ cd pico-sdk
-    $ git submodule update -init
+    $ git submodule update --recursive --init
 
 
 ## Using the Raspberry Pi Pico SDK from the command line
