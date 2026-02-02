@@ -1,3 +1,12 @@
+# Archived!
+This project is now three years old and very out of date.  In the time between when this was written and now VSCode has gotten better, and the Pico intergraiton with VSCode has gotten better and it no longer seems necessary to get a linux development environment up in order to develop for the pico on Windows.  So I'm going to archive this repository.  You should simply follow the current instructions from the Raspberry Pi People on how to setup pico development on Windows. 
+
+Thanks,
+--Alan
+N7JTI
+
+
+
 # Raspberry Pi Pico 2040 C++ development using WSL2, a PicoProbe, and VS Code
 Here are the Setup instructions for raspberry pi pico development using a pico-probe on WSL2 and VSCode.  This repo contains a working and properly configured VScode example that flashes an LED and Writes to the standard UART.  
 
